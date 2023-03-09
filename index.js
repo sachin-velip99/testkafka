@@ -5,7 +5,9 @@ const bodyParser = require("body-parser");
 var cors = require("cors");
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
+
+const { saamsDataConsumer } = require('./consumer')
 
 module.exports = {
   app: app,
@@ -25,15 +27,17 @@ app.get("/", (request, response) => {
   response.json({ info: "SAAMS CONTROLLER" });
 });
 
-const { sendAckToInfra } = require('./producer')
+const { sendAckTosaams } = require('./producer')
 
 app.post("/saamsController/message", async (req, res) => {
   const reqBody = req.body;
   console.log("reqbody",reqBody)
    
-  await sendAckToInfra(reqBody)
+  await sendAckTosaams(reqBody)
   return res.status(200).json('success');
 })
+
+saamsDataConsumer();
 
 app.listen(port, () => {
   console.log(

@@ -19,27 +19,27 @@ require('dotenv').config();
 
 //localhost kafka
 const kafka = new Kafka({
-    clientId: process.env.INFRA_CLIENT_ID,
+    clientId: process.env.SAAMS_CLIENT_ID,
     brokers: [process.env.BROKER]
 })
 
 const producer = kafka.producer()
 //kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner })
 
-module.exports.sendAckToInfra = async (reqBody) => {
+module.exports.sendAckTosaams = async (reqBody) => {
     console.log("reqbody+++++++++",reqBody)
 
     const produceMessage = async () => {
 
         try {
             const sendMessage = await producer.send({
-                topic: process.env.INFRA_DATA_TOPIC,
+                topic: process.env.SAAMS_ACK_DATA,
                 messages: [
                     { value: JSON.stringify(reqBody) },
                 ],
             })
             if(sendMessage){
-                console.log("MESSAGE SENT TO INFRA");
+                console.log("MESSAGE SENT TO saams");
                 console.log("Message : ",sendMessage)
             }
 
