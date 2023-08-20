@@ -29,13 +29,14 @@ const producer = kafka.producer()
 module.exports.sendAckTosaams = async (reqBody) => {
     console.log("reqbody+++++++++",reqBody)
 
+    let key = 1;
     const produceMessage = async () => {
 
         try {
             const sendMessage = await producer.send({
                 topic: process.env.SAAMS_ACK_DATA,
                 messages: [
-                    { value: JSON.stringify(reqBody) },
+                    { key: toString(key), value: JSON.stringify(reqBody) },
                 ],
             })
             if(sendMessage){
